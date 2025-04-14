@@ -1,5 +1,6 @@
 import React from 'react';
 import { useState } from 'react';
+import './Registration.css'
 
 function Registration()
 {
@@ -56,7 +57,9 @@ function Registration()
 
 return(
 <>
-  <form onSubmit={e => e.preventDefault()}>
+  <form onSubmit={e => {e.preventDefault();
+    alert("Form Submitted Successfully");
+  }}>
   
   <h1>User Registration</h1>
     <div>
@@ -148,6 +151,11 @@ return(
     onChange={handleMobile}
     />
     </div>
+
+    <div>
+  <button type="submit">Submit</button>
+   </div>
+
 
   </form>
 </>
