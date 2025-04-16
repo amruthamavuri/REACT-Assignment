@@ -39,35 +39,54 @@ function Registration()
   }
 
   function handleDateOfBirth(e){
-    setDateOfBirth(e.target.value);
-  }
+    const value = e.target.value;
+    setDateOfBirth(value);
 
-  function handleAge(e){
-    setAge(e.target.value);
+    const birthDate = new Date(value);
+    const today = new Date();
+    let CalculateAge = today.getFullYear() - birthDate.getFullYear();
+    const month = today.getMonth() - birthDate.getMonth();
+
+    if (month < 0 || (month === 0 && today.getDate() < birthDate.getDate())){
+      CalculateAge--;
+    }
+
+    if(!isNaN(CalculateAge)){
+      setAge(CalculateAge.toString());
+    } else{
+      setAge('');
+    }
   }
 
   function handlePostCode(e){
-    setPostCode(e.target.value);
+    const value = e.target.value;
+    setPostCode(value);
   }
 
   function handleEmail(e){
-    setEmail(e.target.value);
+    const value = e.target.value;
+    setEmail(value);
   }
 
   function handlePhone(e){
-    setPhone(e.target.value);
+    const value = e.target.value;
+    setPhone(value);
   }
 
   function handleMobile(e){
-    setMobile(e.target.value);
+    const value = e.target.value;
+    setMobile(value);
+  }
+
+  function handleSubmit(e){
+    e.preventDefault();
+    alert("Form submitted succesfully");
   }
 
 return(
 <>
-  <form onSubmit={e => {e.preventDefault();
-    alert("Form Submitted Successfully");
-  }}>
-  
+  <form onSubmit={handleSubmit}>
+    <h1>User Registration</h1>
     <div>
     <label>First Name* : </label>
     <input
@@ -118,7 +137,7 @@ return(
     <input
     placeholder='Age'
     value={age}
-    onChange={handleAge}
+    readOnly
     />
     </div>
     
