@@ -1,4 +1,4 @@
-const locationInfo = {
+const LocationInfo = {
     India : {
         AndhraPradesh : ['Rajahmundry','Vizag','Vijayawada','Kakinada','Guntur'],
         Telangana : ['Hyderabad', 'Khammam', 'Warangal','Medak','Nalgonda'],

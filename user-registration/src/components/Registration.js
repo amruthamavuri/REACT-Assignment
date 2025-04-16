@@ -15,7 +15,7 @@ function Registration()
   const[mobile, setMobile]=useState('');
   
 
-  function UpdateFullName(first, middle, last){
+  function updateFullName(first, middle, last){
     const nameParts = [first, middle, last].filter(part => part.trim() !== '');
     setFullName(nameParts.join(' '));
   }
@@ -23,19 +23,19 @@ function Registration()
   function handleFirstName(e){
     const value = e.target.value;
     setFirstName(value);
-    UpdateFullName(value, middleName, lastName);
+    updateFullName(value, middleName, lastName);
   }
 
   function handleMiddleName(e){
     const value = e.target.value;
     setMiddleName(value);
-    UpdateFullName(firstName, value, lastName);
+    updateFullName(firstName, value, lastName);
   }
 
   function handleLastName(e){
     const value = e.target.value;
     setLastName(value);
-    UpdateFullName(firstName, middleName, value);
+    updateFullName(firstName, middleName, value);
   }
 
   function handleDateOfBirth(e){
@@ -44,15 +44,15 @@ function Registration()
 
     const birthDate = new Date(value);
     const today = new Date();
-    let CalculateAge = today.getFullYear() - birthDate.getFullYear();
+    let calculateAge = today.getFullYear() - birthDate.getFullYear();
     const month = today.getMonth() - birthDate.getMonth();
 
     if (month < 0 || (month === 0 && today.getDate() < birthDate.getDate())){
-      CalculateAge--;
+      calculateAge--;
     }
 
-    if(!isNaN(CalculateAge)){
-      setAge(CalculateAge.toString());
+    if(!isNaN(calculateAge)){
+      setAge(calculateAge.toString());
     } else{
       setAge('');
     }
@@ -119,7 +119,7 @@ return(
     <input
     placeholder='Full Name'
     value={fullName}
-    onChange={UpdateFullName}
+    onChange={updateFullName}
     />
     </div>
     
