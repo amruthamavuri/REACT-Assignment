@@ -64,6 +64,13 @@ body {
     background-color: #e2e8f0;
     color: #4b5563;
   }
+
+  .error {
+    color: red;
+    font-size: 0.9em;
+    margin-top: 2px;
+  }
+  
   
   /* Submit Button Style (optional for later use) */
   button {

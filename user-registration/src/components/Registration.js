@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './Registration.css';
 import LocationInfo from './LocationInfo';
+import emailjs from '@emailjs/browser';
 
 function Registration() {
   const [firstName, setFirstName] = useState('');
@@ -20,6 +21,8 @@ function Registration() {
   const [Countries] = useState(Object.keys(LocationInfo));
   const [States, setStates] = useState([]);
   const [Cities, setCities] = useState([]);
+
+  const [errors, setErrors] = useState({});
 
   function updateFullName(first, middle, last) {
     const nameParts = [first, middle, last].filter(part => part.trim() !== '');
@@ -105,9 +108,55 @@ function Registration() {
 
   function handleSubmit(e) {
     e.preventDefault();
-    alert("Form submitted successfully");
+  
+    const newErrors = {};
+  
+    // validation
+    if (!firstName) newErrors.firstName = 'First name is required';
+    if (!lastName) newErrors.lastName = 'Last name is required';
+    if (!dateOfBirth) newErrors.dateOfBirth = 'Date of Birth is required';
+    if (!country) newErrors.country = 'Country is required';
+    if (!state) newErrors.state = 'State is required';
+    if (!city) newErrors.city = 'City is required';
+    if (!postCode) newErrors.postCode = 'Post code is required';
+    if (!email || !(email.includes('@') && email.includes('.'))) newErrors.email = 'Enter a valid email address';
+    if (!phone || isNaN(phone) || phone.length !== 10) newErrors.phone = 'Enter a valid 10-digit phone number';
+    if (!mobile || isNaN(mobile) || mobile.length !== 10) newErrors.mobile = 'Enter a valid 10-digit mobile number';
+  
+    setErrors(newErrors);
+  
+    if (Object.keys(newErrors).length > 0) return;
+  
+    const templateParams = {
+      firstName,
+      middleName,
+      lastName,
+      fullName,
+      dateOfBirth,
+      age,
+      country,
+      state,
+      city,
+      postCode,
+      email,
+      phone,
+      mobile,
+    };
+  
+    emailjs
+      .send('service_xyzad9b', 'template_9ctzjjx', templateParams, 'd_d-12Jhxo7fDjD7_')
+      .then(
+        (response) => {
+          alert('Form submitted and email sent successfully!');
+          console.log('SUCCESS!', response.status, response.text);
+        },
+        (error) => {
+          alert('Email failed to send. Please try again.');
+          console.log('FAILED...', error);
+        }
+      );
   }
-
+  
   return (
     <>
       <form onSubmit={handleSubmit}>
@@ -116,6 +165,7 @@ function Registration() {
         <div>
           <label>First Name* : </label>
           <input placeholder='First Name' value={firstName} onChange={handleFirstName} />
+          <div className='error'>{errors.firstName}</div>
         </div>
 
         <div>
@@ -126,6 +176,7 @@ function Registration() {
         <div>
           <label>Last Name* : </label>
           <input placeholder='Last Name' value={lastName} onChange={handleLastName} />
+          <div className="error">{errors.lastName}</div>
         </div>
 
         <div>
@@ -136,6 +187,7 @@ function Registration() {
         <div>
           <label>Date of Birth* : </label>
           <input type="date" value={dateOfBirth} onChange={handleDateOfBirth} />
+          <div className="error">{errors.dateOfBirth}</div>
         </div>
 
         <div>
@@ -151,6 +203,7 @@ function Registration() {
               <option key={c} value={c}>{c}</option>
             ))}
           </select>
+          <div className="error">{errors.country}</div>
         </div>
 
         <div>
@@ -161,6 +214,7 @@ function Registration() {
               <option key={s} value={s}>{s}</option>
             ))}
           </select>
+          <div className="error">{errors.state}</div>
         </div>
 
         <div>
@@ -171,26 +225,31 @@ function Registration() {
               <option key={c} value={c}>{c}</option>
             ))}
           </select>
+          <div className="error">{errors.city}</div>
         </div>
 
         <div>
           <label>Post Code* : </label>
           <input placeholder='Post Code' value={postCode} onChange={handlePostCode} />
+          <div className="error">{errors.postCode}</div>
         </div>
 
         <div>
           <label>Email* : </label>
           <input type="email" placeholder='Email' value={email} onChange={handleEmail} />
+          <div className="error">{errors.email}</div>       
         </div>
 
         <div>
           <label>Phone* : </label>
           <input placeholder='Phone' value={phone} onChange={handlePhone} />
+          <div className="error">{errors.phone}</div>
         </div>
 
         <div>
           <label>Mobile* : </label>
           <input placeholder='Mobile' value={mobile} onChange={handleMobile} />
+          <div className="error">{errors.mobile}</div>
         </div>
 
         <div>
