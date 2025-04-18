@@ -46,4 +46,6 @@ const LocationInfo = {
        
 }
 
-export default locationInfo;
+
+
+export default LocationInfo;
