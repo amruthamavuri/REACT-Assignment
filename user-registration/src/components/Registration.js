@@ -64,8 +64,7 @@ function Registration() {
     if (calculateAge < 0) {
       calculateAge = 0;
       setErrors((prev) => ({
-        ...prev,
-        dateOfBirth: 'Date of Birth cannot be in the future',
+        ...prev, dateOfBirth: 'Date of Birth cannot be in the future',
       }));
     } else {
       setErrors((prev) => ({ ...prev, dateOfBirth: '' }));
@@ -84,13 +83,6 @@ function Registration() {
     } else {
       setAge('');
     }
-
-    if (!value){
-      setErrors(prev => ({ ...prev, dateOfBirth: 'Date of Birth is required' }));
-    }
-    else {
-      setErrors (prev => ({ ...prev, dateOfBirth: '' }));
-    }
   }
 
   function handleCountry(e) {
@@ -98,7 +90,7 @@ function Registration() {
     setCountry(chooseCountry);
     setState('');
     setCity('');
-    const updatedStates = Object.keys(LocationInfo[chooseCountry] || {}); // ✅ CHANGED HERE
+    const updatedStates = Object.keys(LocationInfo[chooseCountry] || {}); 
     setStates(updatedStates);
     setCities([]);
   }
