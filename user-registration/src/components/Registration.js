@@ -23,6 +23,7 @@ function Registration() {
   const [Cities, setCities] = useState([]);
 
   const [errors, setErrors] = useState({});
+  const [submitted, setsubmitted] = useState(false);
 
   function updateFullName(first, middle, last) {
     const nameParts = [first, middle, last].filter(part => part.trim() !== '');
@@ -60,10 +61,35 @@ function Registration() {
       calculateAge--;
     }
 
+    if (calculateAge < 0) {
+      calculateAge = 0;
+      setErrors((prev) => ({
+        ...prev,
+        dateOfBirth: 'Date of Birth cannot be in the future',
+      }));
+    } else {
+      setErrors((prev) => ({ ...prev, dateOfBirth: '' }));
+    }
+  
+    setAge(calculateAge.toString());
+
+    if (!value) {
+      setErrors(prev => ({ ...prev, dateOfBirth: 'Date of Birth is required' }));
+    } else {
+      setErrors(prev => ({ ...prev, dateOfBirth: '' }));
+    }
+
     if (!isNaN(calculateAge)) {
       setAge(calculateAge.toString());
     } else {
       setAge('');
+    }
+
+    if (!value){
+      setErrors(prev => ({ ...prev, dateOfBirth: 'Date of Birth is required' }));
+    }
+    else {
+      setErrors (prev => ({ ...prev, dateOfBirth: '' }));
     }
   }
 
@@ -91,19 +117,38 @@ function Registration() {
   }
 
   function handlePostCode(e) {
-    setPostCode(e.target.value);
+    const value = e.target.value;
+    setPostCode(value);
   }
 
   function handleEmail(e) {
-    setEmail(e.target.value);
-  }
+    const value = e.target.value;
+    setEmail(value);
+    if (!value || !(value.includes('@') && value.includes('.'))) {
+      setErrors(prev => ({ ...prev, email: 'Enter a valid email address' }));
+    } else {
+      setErrors(prev => ({ ...prev, email: '' }));
+    }
+  }   
 
   function handlePhone(e) {
-    setPhone(e.target.value);
+    const value = e.target.value;
+    setPhone(value);
+    if (!value || isNaN(value) || value.length !== 10) {
+      setErrors(prev => ({ ...prev, phone: 'Enter a valid 10-digit phone number' }));
+    } else {
+      setErrors(prev => ({ ...prev, phone: '' }));
+    }
   }
 
   function handleMobile(e) {
-    setMobile(e.target.value);
+    const value = e.target.value;
+    setMobile(value);
+    if (!value || isNaN(value) || value.length !== 10) {
+      setErrors(prev => ({ ...prev, mobile: 'Enter a valid 10-digit mobile number' }));
+    } else {
+      setErrors(prev => ({ ...prev, mobile: '' }));
+    }
   }
 
   function handleSubmit(e) {
@@ -146,15 +191,21 @@ function Registration() {
     emailjs
       .send('service_xyzad9b', 'template_9ctzjjx', templateParams, 'd_d-12Jhxo7fDjD7_')
       .then(
-        (response) => {
-          alert('Form submitted and email sent successfully!');
-          console.log('SUCCESS!', response.status, response.text);
-        },
+        () => setsubmitted(true),
         (error) => {
           alert('Email failed to send. Please try again.');
           console.log('FAILED...', error);
         }
       );
+  }
+
+  if (submitted) {
+    return (
+      <div className="success-message" style={{ textAlign: 'center', padding: '2rem' }}>
+        <h2 style={{ color: 'green', fontSize: '2rem' }}>✅ Registration Successful!</h2>
+        <p style={{ fontSize: '1.2rem' }}>Thank you, <strong>{fullName || 'User'}</strong>. Your details have been submitted successfully.</p>
+      </div>
+    );
   }
   
   return (
@@ -164,7 +215,7 @@ function Registration() {
 
         <div>
           <label>First Name* : </label>
-          <input placeholder='First Name' value={firstName} onChange={handleFirstName} />
+          <input placeholder='First Name' value={firstName} onChange={handleFirstName} required/>
           <div className='error'>{errors.firstName}</div>
         </div>
 
@@ -175,7 +226,7 @@ function Registration() {
 
         <div>
           <label>Last Name* : </label>
-          <input placeholder='Last Name' value={lastName} onChange={handleLastName} />
+          <input placeholder='Last Name' value={lastName} onChange={handleLastName} required/>
           <div className="error">{errors.lastName}</div>
         </div>
 
@@ -186,7 +237,14 @@ function Registration() {
 
         <div>
           <label>Date of Birth* : </label>
-          <input type="date" value={dateOfBirth} onChange={handleDateOfBirth} />
+          <input type="date" value={dateOfBirth} max={new Date().toISOString().split("T")[0]}
+           onChange={handleDateOfBirth} onBlur={() => {
+            if (!dateOfBirth) {
+              setErrors(prev => ({ ...prev, dateOfBirth: 'Date of Birth is required' }));
+            } else {
+              setErrors(prev => ({ ...prev, dateOfBirth: '' }));
+            }
+          }} required/>
           <div className="error">{errors.dateOfBirth}</div>
         </div>
 
@@ -197,7 +255,7 @@ function Registration() {
 
         <div>
           <label>Country* : </label>
-          <select value={country} onChange={handleCountry}>
+          <select value={country} onChange={handleCountry} required>
             <option value="">Select Country</option>
             {Countries.map((c) => (
               <option key={c} value={c}>{c}</option>
@@ -208,7 +266,7 @@ function Registration() {
 
         <div>
           <label>State* : </label>
-          <select value={state} onChange={handleState}>
+          <select value={state} onChange={handleState} required>
             <option value="">Select State</option>
             {States.map((s) => (
               <option key={s} value={s}>{s}</option>
@@ -219,7 +277,7 @@ function Registration() {
 
         <div>
           <label>City* : </label>
-          <select value={city} onChange={handleCity}>
+          <select value={city} onChange={handleCity} required >
             <option value="">Select City</option>
             {Cities.map((c) => (
               <option key={c} value={c}>{c}</option>
@@ -230,25 +288,38 @@ function Registration() {
 
         <div>
           <label>Post Code* : </label>
-          <input placeholder='Post Code' value={postCode} onChange={handlePostCode} />
+          <input placeholder='Post Code' value={postCode} onChange={handlePostCode} required/>
           <div className="error">{errors.postCode}</div>
         </div>
 
         <div>
           <label>Email* : </label>
-          <input type="email" placeholder='Email' value={email} onChange={handleEmail} />
+          <input type="email" placeholder='Email' value={email} onChange={handleEmail} onBlur={() => {
+            if (!email || !(email.includes('@') && email.includes('.'))) {
+              setErrors(prev => ({ ...prev, email: 'Enter a valid email address' }));
+            } else {
+              setErrors(prev => ({ ...prev, email: '' }));
+            }
+          }}
+          required/>
           <div className="error">{errors.email}</div>       
         </div>
 
         <div>
           <label>Phone* : </label>
-          <input placeholder='Phone' value={phone} onChange={handlePhone} />
+          <input placeholder='Phone' value={phone} onChange={handlePhone} onBlur={() => {
+            if (!phone || isNaN(phone) || phone.length !== 10) {
+              setErrors(prev => ({ ...prev, phone: 'Enter a valid 10-digit phone number' }));
+            } else {
+              setErrors(prev => ({ ...prev, phone: '' }));
+          }
+        }}required/>
           <div className="error">{errors.phone}</div>
         </div>
 
         <div>
           <label>Mobile* : </label>
-          <input placeholder='Mobile' value={mobile} onChange={handleMobile} />
+          <input placeholder='Mobile' value={mobile} onChange={handleMobile} required/>
           <div className="error">{errors.mobile}</div>
         </div>
 
