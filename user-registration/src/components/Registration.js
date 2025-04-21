@@ -194,7 +194,7 @@ function Registration() {
   if (submitted) {
     return (
       <div className="success-message" style={{ textAlign: 'center', padding: '2rem' }}>
-        <h2 style={{ color: 'green', fontSize: '2rem' }}>✅ Registration Successful!</h2>
+        <h2 style={{ color: 'blue', fontSize: '2rem' }}>✅ Registration Successful!</h2>
         <p style={{ fontSize: '1.2rem' }}>Thank you, <strong>{fullName || 'User'}</strong>. Your details have been submitted successfully.</p>
       </div>
     );
